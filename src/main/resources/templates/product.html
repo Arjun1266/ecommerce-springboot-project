@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Details</title>
+</head>
+<body>
+
+<h1 th:text="${product.name}"></h1>
+<p th:text="'Price: ₹' + ${product.price}"></p>
+<p th:text="${product.description}"></p>
+
+<img th:src="${product.imageUrl}" width="200">
+
+<!-- Buy: direct cart add -->
+<form th:action="@{/cart/add}" method="post">
+    <input type="hidden" name="productId" th:value="${product.id}">
+    <button type="submit">Buy Now</button>
+</form>
+
+<a href="/home">Back</a>
+
+</body>
+</html>

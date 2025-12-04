@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>E-Commerce Home</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Poppins, sans-serif;
+            background: #14142b;
+            color: white;
+        }
+
+        /* ---------------- NAVBAR ---------------- */
+        .navbar {
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(0, 0, 40, 0.7);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-left {
+            font-size: 28px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #00d4ff, #8c3cff);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-center {
+            font-size: 22px;
+            color: #00d4ff;
+            font-weight: 500;
+        }
+
+        .nav-right button {
+            padding: 10px 20px;
+            background: #00d4ff;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+
+        .nav-right button:hover {
+            transform: scale(1.1);
+        }
+
+        /* ---------------- PRODUCT CARDS ---------------- */
+        .product-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 40px;
+            gap: 30px;
+        }
+
+        .product-card {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.07);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .product-card img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0px); }
+        }
+
+        .add-btn {
+            padding: 10px 18px;
+            margin-top: 12px;
+            background-color: #00d4ff;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-btn:hover {
+            background-color: #0be7ff;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<!-- ---------------- NAVBAR ---------------- -->
+<div class="navbar">
+    <div class="nav-left">Bapp re Baap (BRB)</div>
+
+    <div class="nav-center">
+        Welcome, <span th:text="${username}">User</span> 👋
+    </div>
+
+    <div class="nav-right">
+        <a href="/cart/view"><button>View Cart</button></a>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
+</div>
+
+
+<!-- ---------------- PRODUCTS ---------------- -->
+<div class="product-container">
+
+    <div th:each="product : ${products}" class="product-card fade-in">
+
+        <!-- Clickable Product Image - Open product details page -->
+        <a th:href="@{/product/{id}(id=${product.id})}">
+            <img th:src="${product.imageUrl}" alt="Product Image">
+        </a>
+
+        <h3 th:text="${product.name}"></h3>
+
+        <p th:text="'₹' + ${product.price}"></p>
+
+        <!-- Add to Cart -->
+        <form th:action="@{/cart/add}" method="post">
+            <input type="hidden" name="productId" th:value="${product.id}">
+            <button class="add-btn" type="submit">Add to Cart</button>
+        </form>
+
+        <!-- Buy Now button -->
+        <a th:href="@{/product/{id}(id=${product.id})}">
+            <button class="add-btn" style="background:#8c3cff; color:white;">
+                Buy Now
+            </button>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

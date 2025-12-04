@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #1e1e2f;
+            color: white;
+            padding: 30px;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(0,212,255,0.3);
+        }
+
+        img {
+            width: 80px;
+        }
+
+        .qty-btn {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background: red;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buy-btn {
+            background: #00d4ff;
+            color: black;
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #00d4ff;
+        }
+
+        .download-btn {
+            padding: 12px 25px;
+            background: #00d4ff;
+            color: black;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-download {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Your Shopping Cart</h2>
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th>Image</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th>Actions</th>
+    </tr>
+
+    <!-- LOOP -->
+    <tr th:each="item : ${cartItems}">
+        <td th:text="${item.product.name}"></td>
+
+        <td>
+            <img th:src="${item.product.imageUrl}">
+        </td>
+
+        <td th:text="'₹' + ${item.product.price}"></td>
+
+        <td>
+            <!-- Decrease -->
+            <form th:action="@{/cart/decrease}" method="post" style="display:inline;">
+                <input type="hidden" name="cartId" th:value="${item.id}">
+                <button class="qty-btn">-</button>
+            </form>
+
+            <span th:text="${item.quantity}"></span>
+
+            <!-- Increase -->
+            <form th:action="@{/cart/increase}" method="post" style="display:inline;">
+                <input type="hidden" name="cartId" th:value="${item.id}">
+                <button class="qty-btn">+</button>
+            </form>
+        </td>
+
+        <!-- Total for each product -->
+        <td th:text="'₹' + (${item.product.price} * ${item.quantity})"></td>
+
+        <td>
+            <!-- Remove -->
+            <form th:action="@{/cart/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="cartId" th:value="${item.id}">
+                <button class="delete-btn">Remove</button>
+            </form>
+
+            <!-- Buy Now (Single Product PDF) -->
+            <a th:href="@{/buy/{id}(id=${item.product.id})}">
+                <button class="buy-btn">Buy Now</button>
+            </a>
+        </td>
+    </tr>
+</table>
+
+<h2>
+    Total Amount: <span th:text="'₹' + ${total}"></span>
+</h2>
+
+<!-- Download full cart PDF -->
+<div class="btn-download">
+    <a href="/cart/receipt">
+        <button class="download-btn">Download Full Cart Receipt PDF</button>
+    </a>
+</div>
+
+</body>
+</html>
